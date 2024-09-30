@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:personality_checker/screens/getting_started.dart';
+import 'package:personality_checker/state/app_state.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  // FirebaseFirestore.instance.settings =
-  //     const Settings(persistenceEnabled: true);
-  runApp(const MyApp());
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => AppState()),
+  ], child: const MyApp()));
 }
 
 ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         builder: (context, currentMode, child) {
           return MaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'TaskiT',
+              title: 'Personality Checker',
               theme: ThemeData(
                 scaffoldBackgroundColor: const Color(0xFFF2EFE8),
                 primaryColorLight: const Color(0xFF76ABAE),
