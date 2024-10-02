@@ -119,6 +119,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool checkSelected() {
+    return _questions[currentQuestionIndex].selectedOption == -1;
+  }
+
   // Move to the next question
   void nextQuestion() {
     if (_currentQuestionIndex < _questions.length - 1) {
