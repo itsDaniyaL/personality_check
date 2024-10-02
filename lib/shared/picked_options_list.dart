@@ -20,11 +20,13 @@ class PickedOptionsList extends StatelessWidget {
                   .elementAt(questions[index].selectedOption!)
               : null;
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            padding: EdgeInsets.only(
+                left: index == 0 ? 25.0 : 5.0,
+                right: index == questions.length - 1 ? 25.0 : 5.0),
             child: SizedBox(
-              width: MediaQuery.of(context).size.height * 0.35,
+              width: 210,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 180),
+                constraints: const BoxConstraints(minHeight: 210),
                 child: IntrinsicHeight(
                   child: Container(
                     decoration: BoxDecoration(

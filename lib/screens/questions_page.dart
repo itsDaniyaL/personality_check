@@ -189,16 +189,18 @@ class _QuestionsPageState extends State<QuestionsPage> {
                               onPressed: state.checkSelected()
                                   ? null
                                   : () {
-                                      state.isLastQuestion
-                                          ? Navigator.push<void>(
-                                              context,
-                                              MaterialPageRoute<void>(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const PersonalityPreviewPage(),
-                                              ),
-                                            )
-                                          : state.nextQuestion();
+                                      if (state.isLastQuestion) {
+                                        state.finalizePersonality();
+                                        Navigator.push<void>(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (BuildContext context) =>
+                                                const PersonalityPreviewPage(),
+                                          ),
+                                        );
+                                      } else {
+                                        state.nextQuestion();
+                                      }
                                     },
                               textColor: Colors.white,
                               buttonColor: const Color(0xFF1E1515),
