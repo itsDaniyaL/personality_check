@@ -120,7 +120,7 @@ class AppState extends ChangeNotifier {
   }
 
   bool checkSelected() {
-    return _questions[currentQuestionIndex].selectedOption == -1;
+    return _questions[currentQuestionIndex].selectedOption == null;
   }
 
   // Move to the next question
@@ -153,6 +153,8 @@ class AppState extends ChangeNotifier {
 
   // Return the progess to show for progress indicator
   double get progress {
-    return _currentQuestionIndex / _questions.length;
+    int answeredQuestions =
+        _questions.where((q) => q.selectedOption != null).length;
+    return answeredQuestions / _questions.length;
   }
 }

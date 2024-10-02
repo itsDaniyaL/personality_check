@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:personality_checker/screens/personality_preview_page.dart';
 import 'package:personality_checker/shared/answers_progress_indicator.dart';
 import 'package:personality_checker/shared/filled_button.dart';
 import 'package:personality_checker/state/app_state.dart';
@@ -33,7 +34,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                   direction: Axis.vertical,
                   children: [
                     const AnswersProgressIndicator(),
-                    const SizedBox(height: 30.0),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                     Expanded(
                       flex: 6,
                       child: SingleChildScrollView(
@@ -187,11 +188,23 @@ class _QuestionsPageState extends State<QuestionsPage> {
                             child: CustomFilledButton(
                               onPressed: state.checkSelected()
                                   ? null
-                                  : state.nextQuestion,
+                                  : () {
+                                      state.isLastQuestion
+                                          ? Navigator.push<void>(
+                                              context,
+                                              MaterialPageRoute<void>(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const PersonalityPreviewPage(),
+                                              ),
+                                            )
+                                          : state.nextQuestion();
+                                    },
                               textColor: Colors.white,
                               buttonColor: const Color(0xFF1E1515),
-                              child: const Text("Continue",
-                                  style: TextStyle(
+                              child: Text(
+                                  state.isLastQuestion ? "Check" : "Continue",
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                   )),
                             ),
