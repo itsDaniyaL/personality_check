@@ -15,16 +15,23 @@ class PersonalityPreviewPage extends StatefulWidget {
 
 class _PersonalityPreviewPageState extends State<PersonalityPreviewPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: CustomFilledButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.push<void>(
             context,
             MaterialPageRoute<void>(
               builder: (BuildContext context) => const GettingStartedPage(),
             ),
           );
+          var state = Provider.of<AppState>(context, listen: false);
+          await state.clearQuestions();
         },
         textColor: Colors.white,
         buttonColor: const Color(0xFF1E1515),
@@ -96,7 +103,7 @@ class _PersonalityPreviewPageState extends State<PersonalityPreviewPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Text(
-                            state.displayDescription(),
+                            state.personalityDescription,
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),

@@ -29,7 +29,12 @@ class CustomFilledButton extends StatelessWidget {
       height: height,
       width: width,
       child: FilledButton(
-        onPressed: () => {HapticFeedback.heavyImpact(), onPressed!()},
+        onPressed: onPressed != null
+            ? () {
+                HapticFeedback.heavyImpact();
+                onPressed!();
+              }
+            : null,
         style: FilledButton.styleFrom(
           foregroundColor: onPressed != null ? textColor : Colors.grey,
           backgroundColor: onPressed != null

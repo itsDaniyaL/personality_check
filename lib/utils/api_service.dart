@@ -1,7 +1,53 @@
 import 'package:personality_checker/models/question.dart';
 
-class QuestionsUtils {
-  static final List<Question> questions = [
+class ApiService {
+  Future<List<Question>> fetchQuestions() async {
+    await Future.delayed(const Duration(seconds: 5));
+    return questions;
+  }
+
+  Future<String> fetchDescription(String personalityType) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    switch (personalityType) {
+      case 'introvert':
+        return introvertDescription;
+      case 'extrovert':
+        return extrovertDescription;
+      case 'ambivert':
+        return ambivertDescription;
+      default:
+        return "No description available";
+    }
+  }
+
+  Future finalizePersonality(List<Question> questions) async {
+    int introvertCount = 0;
+    int extrovertCount = 0;
+
+    for (var question in questions) {
+      if (question.selectedOption != null) {
+        final selectedOptionKey =
+            question.options.keys.toList()[question.selectedOption!];
+        final selectedOptionValue = question.options[selectedOptionKey];
+
+        if (selectedOptionValue == 'introvert') {
+          introvertCount++;
+        } else if (selectedOptionValue == 'extrovert') {
+          extrovertCount++;
+        }
+      }
+    }
+
+    if (introvertCount > extrovertCount) {
+      return 'introvert';
+    } else if (extrovertCount > introvertCount) {
+      return 'extrovert';
+    } else {
+      return 'ambivert';
+    }
+  }
+
+  final List<Question> questions = [
     Question(
       title:
           'You’re really busy at work and a colleague is telling you their life story and personal woes.\n\nYou:',
@@ -115,12 +161,12 @@ class QuestionsUtils {
     ),
   ];
 
-  static const introvertDescription =
+  final introvertDescription =
       "You feel that living alone is to live happily, and you prefer hiding in a crowd rather than standing out in one. You are perpetually tormented by the idea of doing things wrong, not understanding or not being alert enough or intelligent enough to do what others expect of you. You lack in self-confidence and you seem to believe that others are better than you. While in a conversation, for example, you would be more likely to go along with the other’s points of view as you don’t fully respect your own opinions.";
 
-  static const extrovertDescription =
+  final extrovertDescription =
       "You thrive on being the center of attention and enjoy standing out in a crowd. You feel energized when interacting with others and are always eager to share your thoughts and ideas. You have a natural confidence in your abilities and rarely worry about making mistakes or falling short of others' expectations. You believe strongly in your own viewpoints and aren't afraid to express them, even if they differ from the majority. In conversations, you tend to lead, guiding discussions with enthusiasm and passion, and you find great satisfaction in inspiring or persuading others to see things your way.";
 
-  static const ambivertDescription =
+  final ambivertDescription =
       "You possess a balance of both introverted and extroverted traits. You are adaptable and can thrive in a variety of social situations, whether it involves solitude or interaction with others. Depending on the context, you may enjoy the company of others and seek out social engagement, while at other times, you value your personal space and need moments of quiet reflection. Ambiverts are comfortable navigating between the two extremes of social behaviour, finding energy from both solitude and interaction. Your versatility allows you to strike a balance, making you both approachable and introspective.";
 }

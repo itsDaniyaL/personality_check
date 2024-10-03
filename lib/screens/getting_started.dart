@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:personality_checker/screens/questions_page.dart';
 import 'package:personality_checker/shared/filled_button.dart';
+import 'package:personality_checker/state/app_state.dart';
+import 'package:provider/provider.dart';
 
 class GettingStartedPage extends StatefulWidget {
   const GettingStartedPage({super.key});
@@ -11,6 +13,24 @@ class GettingStartedPage extends StatefulWidget {
 }
 
 class _GettingStartedPageState extends State<GettingStartedPage> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future fetchQuestions() async {
+    setState(() {
+      isLoading = true;
+    });
+    var state = Provider.of<AppState>(context, listen: false);
+    await state.loadQuestionsFromPreferences();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: OrientationBuilder(builder: (context, orientation) {
@@ -21,6 +41,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
             direction: orientation == Orientation.portrait
                 ? Axis.vertical
                 : Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.20,
@@ -75,26 +96,36 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                 children: [
                   if (orientation == Orientation.portrait)
                     CustomFilledButton(
-                      onPressed: () {
-                        Navigator.push<void>(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const QuestionsPage(),
-                          ),
-                        );
-                      },
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              await fetchQuestions();
+                              if (context.mounted) {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        const QuestionsPage(),
+                                  ),
+                                );
+                              }
+                            },
                       textColor: Colors.white,
                       buttonColor: const Color(0xFF1E1515),
-                      child: const Text("Continue",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          )),
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Text("Continue",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              )),
                     ),
                   const SizedBox(
                     height: 20.0,
                   ),
-                  // if (orientation == Orientation.portrait)
                   Align(
                     alignment: Alignment.center,
                     child: SvgPicture.asset(
