@@ -129,7 +129,6 @@ class AppState extends ChangeNotifier {
       _questions = [];
       _personalityType = '';
       _currentQuestionIndex = 0;
-      notifyListeners();
     } catch (e) {
       debugPrint('Error clearing SharedPreferences: $e');
     }

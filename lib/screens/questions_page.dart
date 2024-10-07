@@ -22,6 +22,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              showConfirmationDialog(
+                context,
+              );
+            },
+          ),
         ),
         body: OrientationBuilder(builder: (context, orientation) {
           return Consumer<AppState>(builder: (context, state, child) {
@@ -252,5 +260,36 @@ class _QuestionsPageState extends State<QuestionsPage> {
             );
           });
         }));
+  }
+
+  Future<void> showConfirmationDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const Text('This will clear all selected answers'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                var state = Provider.of<AppState>(context, listen: false);
+                await state.clearQuestions();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

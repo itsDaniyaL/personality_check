@@ -24,14 +24,13 @@ class _PersonalityPreviewPageState extends State<PersonalityPreviewPage> {
     return Scaffold(
       floatingActionButton: CustomFilledButton(
         onPressed: () async {
-          Navigator.push<void>(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => const GettingStartedPage(),
-            ),
-          );
           var state = Provider.of<AppState>(context, listen: false);
           await state.clearQuestions();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const GettingStartedPage(),
+              ),
+              (Route<dynamic> route) => false);
         },
         textColor: Colors.white,
         buttonColor: const Color(0xFF1E1515),
