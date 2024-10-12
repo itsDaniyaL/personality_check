@@ -65,7 +65,7 @@ class _AnswersProgressIndicatorState extends State<AnswersProgressIndicator>
         value: _animation.value,
         semanticsLabel: 'Answers Progress Indicator',
         backgroundColor: const Color(0xFFD9D9D9),
-        color: const Color(0xFF000000),
+        color: Theme.of(context).primaryColorLight,
       ),
     );
   }

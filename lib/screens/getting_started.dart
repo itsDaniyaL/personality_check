@@ -54,19 +54,19 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         RichText(
-                          text: const TextSpan(children: [
+                          text: TextSpan(children: [
                             TextSpan(
                                 text: "Get started\nwith your\n",
                                 style: TextStyle(
                                     fontSize: 35.0,
                                     fontWeight: FontWeight.w400,
-                                    color: Color(0xFF1E1515))),
+                                    color: Theme.of(context).primaryColorLight,)),
                             TextSpan(
                                 text: "Personality Check",
                                 style: TextStyle(
                                     fontSize: 35.0,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFFFD9191))),
+                                    color: Theme.of(context).secondaryHeaderColor,)),
                           ]),
                         ),
                         if (orientation == Orientation.landscape)
@@ -80,8 +80,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                                 ),
                               );
                             },
-                            textColor: Colors.white,
-                            buttonColor: const Color(0xFF1E1515),
+                            buttonColor: Theme.of(context).primaryColorLight,
                             child: const Text("Continue",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -110,8 +109,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                                 );
                               }
                             },
-                      textColor: Colors.white,
-                      buttonColor: const Color(0xFF1E1515),
+                      buttonColor: Theme.of(context).primaryColorLight,
                       child: isLoading
                           ? const SizedBox(
                               width: 20,

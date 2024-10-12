@@ -13,10 +13,12 @@ class AppState extends ChangeNotifier {
   String _personalityDescription = '';
   bool _isLoading = false;
   int _currentQuestionIndex = 0;
+  int _totalQuestions = 0;
 
   List<Question> get questions => _questions;
   String get personalityType => _personalityType;
   int get currentQuestionIndex => _currentQuestionIndex;
+  int get totalQuestions => _totalQuestions;
   Question get currentQuestion => _questions[_currentQuestionIndex];
   String get personalityDescription => _personalityDescription;
   bool get isLoading => _isLoading;
@@ -35,25 +37,56 @@ class AppState extends ChangeNotifier {
       List<String> questionsJson =
           _questions.map((q) => jsonEncode(q.toJson())).toList();
       await prefs.setStringList('questions', questionsJson);
+       await prefs.setInt('currentQuestionIndex', _currentQuestionIndex);
     } catch (e) {
       debugPrint('Error saving questions to SharedPreferences: $e');
     }
   }
 
-  // Load questions from SharedPreferences
+  // Load questions and total count from SharedPreferences
   Future<void> loadQuestionsFromPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Get questions as List<String>
     List<String>? questionsJson = prefs.getStringList('questions');
 
-    if (questionsJson != null && questionsJson.isNotEmpty) {
-      _questions =
-          questionsJson.map((q) => Question.fromJson(jsonDecode(q))).toList();
-    } else {
-      // Fetch from API if not found in SharedPreferences
-      _questions = await _apiService.fetchQuestions();
-      await _saveQuestionsToPreferences(); // Save fetched questions for future use
+    // Get totalQuestions as an int
+    int? totalQuestions = prefs.getInt('totalQuestions');
+    int? currentQuestionIndex = prefs.getInt('currentQuestionIndex');
+
+    if (totalQuestions != null && currentQuestionIndex != null) {
+      _totalQuestions = totalQuestions;
+      _currentQuestionIndex = currentQuestionIndex;
     }
+
+    // Load total number of questions from the API if not in SharedPreferences
+    if (_totalQuestions == 0) {
+      _totalQuestions = await _apiService.fetchTotalQuestions();
+      await prefs.setInt('totalQuestions', _totalQuestions);
+    }
+
+    if (questionsJson != null && questionsJson.isNotEmpty) {
+      _questions = questionsJson.map((q) => Question.fromJson(jsonDecode(q))).toList();
+    } else {
+      // Fetch the first question from the API if not found in SharedPreferences
+      Question fetchedQuestion = await _apiService.fetchQuestion(_currentQuestionIndex);
+      _questions.add(fetchedQuestion);
+      await _saveQuestionsToPreferences(); // Save fetched question for future use
+    }
+
     notifyListeners();
+  }
+
+
+  // Fetch the next question from API
+  Future<void> fetchNextQuestion() async {
+    if (_currentQuestionIndex < _totalQuestions - 1) {
+      _currentQuestionIndex++;
+      Question nextQuestion = await _apiService.fetchQuestion(_currentQuestionIndex);
+      _questions.add(nextQuestion);
+      await _saveQuestionsToPreferences(); // Save updated questions
+      notifyListeners();
+    }
   }
 
   // Check if the current question has an answer selected
@@ -62,9 +95,9 @@ class AppState extends ChangeNotifier {
   }
 
   // Navigate to the next question
-  void nextQuestion() {
-    if (_currentQuestionIndex < _questions.length - 1) {
-      _currentQuestionIndex++;
+  void nextQuestion() async {
+    if (_currentQuestionIndex < _questions.length) {
+      await fetchNextQuestion();
       notifyListeners();
     }
   }
@@ -100,7 +133,6 @@ class AppState extends ChangeNotifier {
   Future finalizePersonality() async {
     _personalityType = await _apiService.finalizePersonality(_questions);
     await getPersonalityDescription();
-
     notifyListeners();
   }
 
@@ -118,22 +150,32 @@ class AppState extends ChangeNotifier {
   double get progress {
     int answeredQuestions =
         _questions.where((q) => q.selectedOption != null).length;
-    return answeredQuestions / _questions.length;
+    return answeredQuestions / _totalQuestions;
+  }
+
+  void clearSelectedOptions() {
+    for (var question in _questions) {
+      question.selectedOption = null;
+    }
   }
 
   // Clear questions and reset SharedPreferences
   Future<void> clearQuestions() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      await preferences.clear();
+      await preferences.remove('questions');
+      await preferences.remove('totalQuestions');
+      await preferences.remove('currentQuestionIndex');
+      clearSelectedOptions();
       _questions = [];
       _personalityType = '';
       _currentQuestionIndex = 0;
+      _totalQuestions = 0;
     } catch (e) {
       debugPrint('Error clearing SharedPreferences: $e');
     }
   }
 
   // Check if this is the last question
-  bool get isLastQuestion => _currentQuestionIndex == _questions.length - 1;
+  bool get isLastQuestion => _currentQuestionIndex == _totalQuestions - 1;
 }

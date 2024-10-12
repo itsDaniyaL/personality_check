@@ -32,8 +32,7 @@ class _PersonalityPreviewPageState extends State<PersonalityPreviewPage> {
               ),
               (Route<dynamic> route) => false);
         },
-        textColor: Colors.white,
-        buttonColor: const Color(0xFF1E1515),
+        buttonColor: Theme.of(context).primaryColorLight,
         child: const Text("Retake",
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -80,8 +79,8 @@ class _PersonalityPreviewPageState extends State<PersonalityPreviewPage> {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(state.personalityType,
-                                    style: const TextStyle(
-                                        color: Color(0xFFFD9191),
+                                    style:TextStyle(
+                                        color: Theme.of(context).secondaryHeaderColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
                                 const SizedBox(

@@ -45,7 +45,7 @@ class PickedOptionsList extends StatelessWidget {
                             Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  color: const Color(0xFF1E1515)),
+                                  color: Theme.of(context).primaryColorLight),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(

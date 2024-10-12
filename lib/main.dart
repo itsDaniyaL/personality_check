@@ -26,26 +26,14 @@ class MyApp extends StatelessWidget {
               title: 'Personality Checker',
               theme: ThemeData(
                 scaffoldBackgroundColor: const Color(0xFFF2EFE8),
-                primaryColorLight: const Color(0xFF76ABAE),
-                secondaryHeaderColor: const Color(0xFF31363F),
-                primaryColor: const Color(0xFF31363F),
+                primaryColorLight: const Color(0xFF1E1515),
+                secondaryHeaderColor: const Color(0xFFFD9191),
+                dialogBackgroundColor: const Color(0xFFFFFFFF),
                 useMaterial3: true,
                 colorScheme:
                     ColorScheme.fromSeed(seedColor: const Color(0xFFEEEEEE))
                         .copyWith(error: const Color(0xFFAE0909))
                         .copyWith(surface: const Color(0xFF222831)),
-                fontFamily: 'OpenSans',
-              ),
-              darkTheme: ThemeData(
-                useMaterial3: true,
-                scaffoldBackgroundColor: const Color(0xFF222831),
-                primaryColorLight: const Color(0xFF76ABAE),
-                secondaryHeaderColor: const Color(0xFF212121),
-                primaryColor: const Color(0xFFFFFFFF),
-                colorScheme:
-                    ColorScheme.fromSeed(seedColor: const Color(0xFFEEEEEE))
-                        .copyWith(error: const Color(0xFFAE0909))
-                        .copyWith(surface: const Color(0xFFEEEEEE)),
                 fontFamily: 'OpenSans',
               ),
               themeMode: ThemeMode.light,

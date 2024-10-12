@@ -1,9 +1,24 @@
 import 'package:personality_checker/models/question.dart';
 
 class ApiService {
-  Future<List<Question>> fetchQuestions() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return questions;
+  Future<Question> fetchQuestion(currentQuestionIndex) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    if (currentQuestionIndex < questions.length) {
+      final question = questions[currentQuestionIndex];
+      return question;
+    } else {
+      throw Exception("No more questions available.");
+    }
+  }
+
+  // Fetch the total number of questions
+  Future<int> fetchTotalQuestions() async {
+    if (questions.isNotEmpty) {
+      return questions.length;
+    } else {
+      throw Exception('Failed to fetch total number of questions');
+    }
   }
 
   Future<String> fetchDescription(String personalityType) async {

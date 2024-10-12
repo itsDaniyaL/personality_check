@@ -23,7 +23,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
           backgroundColor: Colors.transparent,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColorLight,),
             onPressed: () {
               showConfirmationDialog(
                 context,
@@ -92,7 +92,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                         child: IntrinsicHeight(
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                color: Colors.white,
+                                                color: Theme.of(context).dialogBackgroundColor,
                                                 borderRadius:
                                                     BorderRadius.circular(25)),
                                             child: Padding(
@@ -122,8 +122,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                                                     .circular(
                                                                         12),
                                                             color: selectedOption
-                                                                ? const Color(
-                                                                    0xFF1E1515)
+                                                                ? Theme.of(context).primaryColorLight
                                                                 : Colors
                                                                     .transparent),
                                                         child: Padding(
@@ -142,8 +141,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                                                     color: selectedOption
                                                                         ? Colors
                                                                             .transparent
-                                                                        : const Color(
-                                                                            0xFFD9D9D9),
+                                                                        : Colors.white,
                                                                     borderRadius:
                                                                         BorderRadius
                                                                             .circular(5),
@@ -172,8 +170,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                                                       color: selectedOption
                                                                           ? Colors
                                                                               .white
-                                                                          : const Color(
-                                                                              0xFF1E1515),
+                                                                          : Theme.of(context).primaryColorLight,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -208,8 +205,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                     onPressed: state.currentQuestionIndex == 0
                                         ? null
                                         : state.previousQuestion,
-                                    textColor: Colors.white,
-                                    buttonColor: const Color(0xFF1E1515),
+                                    buttonColor: Theme.of(context).primaryColorLight,
                                     child: const Text("Previous",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
@@ -240,8 +236,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                               state.nextQuestion();
                                             }
                                           },
-                                    textColor: Colors.white,
-                                    buttonColor: const Color(0xFF1E1515),
+                                    buttonColor: Theme.of(context).primaryColorLight,
                                     child: Text(
                                         state.isLastQuestion
                                             ? "Check"
