@@ -3,7 +3,7 @@ import 'package:personality_checker/models/question.dart';
 class ApiService {
   Future<Question> fetchQuestion(currentQuestionIndex) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     if (currentQuestionIndex < questions.length) {
       final question = questions[currentQuestionIndex];
       return question;
@@ -36,6 +36,7 @@ class ApiService {
   }
 
   Future finalizePersonality(List<Question> questions) async {
+    print("Checking $questions");
     int introvertCount = 0;
     int extrovertCount = 0;
 

@@ -7,7 +7,8 @@ import 'package:personality_checker/utils/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppState extends ChangeNotifier {
-  final ApiService _apiService = ApiService();
+  final ApiService _apiService;
+  SharedPreferences? _sharedPreferences;
   List<Question> _questions = [];
   String _personalityType = '';
   String _personalityDescription = '';
@@ -23,6 +24,18 @@ class AppState extends ChangeNotifier {
   String get personalityDescription => _personalityDescription;
   bool get isLoading => _isLoading;
 
+  // Setter for questions
+  void setQuestions(List<Question> questions) {
+    _questions = questions;
+    notifyListeners();
+    _saveQuestionsToPreferences();
+  }
+
+  // Initialize AppState incase of initializing with apiService and SharedPreferences
+  AppState({ApiService? apiService, SharedPreferences? sharedPreferences})
+      : _apiService = apiService ?? ApiService(),
+        _sharedPreferences = sharedPreferences;
+
   // Select an answer for the current question
   void selectAnswer(int index) {
     _questions[_currentQuestionIndex].selectedOption = index;
@@ -33,11 +46,12 @@ class AppState extends ChangeNotifier {
   // Save the questions list in SharedPreferences
   Future<void> _saveQuestionsToPreferences() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      _sharedPreferences = await SharedPreferences.getInstance();
       List<String> questionsJson =
           _questions.map((q) => jsonEncode(q.toJson())).toList();
-      await prefs.setStringList('questions', questionsJson);
-       await prefs.setInt('currentQuestionIndex', _currentQuestionIndex);
+      await _sharedPreferences!.setStringList('questions', questionsJson);
+      await _sharedPreferences!
+          .setInt('currentQuestionIndex', _currentQuestionIndex);
     } catch (e) {
       debugPrint('Error saving questions to SharedPreferences: $e');
     }
@@ -45,14 +59,16 @@ class AppState extends ChangeNotifier {
 
   // Load questions and total count from SharedPreferences
   Future<void> loadQuestionsFromPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _sharedPreferences = await SharedPreferences.getInstance();
 
     // Get questions as List<String>
-    List<String>? questionsJson = prefs.getStringList('questions');
+    List<String>? questionsJson =
+        _sharedPreferences!.getStringList('questions');
 
     // Get totalQuestions as an int
-    int? totalQuestions = prefs.getInt('totalQuestions');
-    int? currentQuestionIndex = prefs.getInt('currentQuestionIndex');
+    int? totalQuestions = _sharedPreferences!.getInt('totalQuestions');
+    int? currentQuestionIndex =
+        _sharedPreferences!.getInt('currentQuestionIndex');
 
     if (totalQuestions != null && currentQuestionIndex != null) {
       _totalQuestions = totalQuestions;
@@ -62,14 +78,16 @@ class AppState extends ChangeNotifier {
     // Load total number of questions from the API if not in SharedPreferences
     if (_totalQuestions == 0) {
       _totalQuestions = await _apiService.fetchTotalQuestions();
-      await prefs.setInt('totalQuestions', _totalQuestions);
+      await _sharedPreferences!.setInt('totalQuestions', _totalQuestions);
     }
 
     if (questionsJson != null && questionsJson.isNotEmpty) {
-      _questions = questionsJson.map((q) => Question.fromJson(jsonDecode(q))).toList();
+      _questions =
+          questionsJson.map((q) => Question.fromJson(jsonDecode(q))).toList();
     } else {
       // Fetch the first question from the API if not found in SharedPreferences
-      Question fetchedQuestion = await _apiService.fetchQuestion(_currentQuestionIndex);
+      Question fetchedQuestion =
+          await _apiService.fetchQuestion(_currentQuestionIndex);
       _questions.add(fetchedQuestion);
       await _saveQuestionsToPreferences(); // Save fetched question for future use
     }
@@ -77,12 +95,12 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // Fetch the next question from API
   Future<void> fetchNextQuestion() async {
     if (_currentQuestionIndex < _totalQuestions - 1) {
       _currentQuestionIndex++;
-      Question nextQuestion = await _apiService.fetchQuestion(_currentQuestionIndex);
+      Question nextQuestion =
+          await _apiService.fetchQuestion(_currentQuestionIndex);
       _questions.add(nextQuestion);
       await _saveQuestionsToPreferences(); // Save updated questions
       notifyListeners();
@@ -130,7 +148,7 @@ class AppState extends ChangeNotifier {
   }
 
   // Finalize personality based on selected options
-  Future finalizePersonality() async {
+  Future<void> finalizePersonality() async {
     _personalityType = await _apiService.finalizePersonality(_questions);
     await getPersonalityDescription();
     notifyListeners();
