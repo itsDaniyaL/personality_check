@@ -36,7 +36,6 @@ class ApiService {
   }
 
   Future finalizePersonality(List<Question> questions) async {
-    print("Checking $questions");
     int introvertCount = 0;
     int extrovertCount = 0;
 
