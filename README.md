@@ -86,4 +86,10 @@ flutter test --coverage
 * You may need to run **flutter doctor** to ensure that your environment is properly configured.
 * If you encounter issues with dependencies, run **flutter pub get** again and ensure your platform SDKs are up-to-date.
 
+## Screenshots
+![App Screenshot](assets/images/screenshot_1.png)
+![App Screenshot](assets/images/screenshot_2.png)
+![App Screenshot](assets/images/screenshot_3.png)
+
+
 
