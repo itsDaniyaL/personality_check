@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:personality_checker/screens/getting_started.dart';
 import 'package:personality_checker/screens/personality_preview_page.dart';
 import 'package:personality_checker/shared/answers_progress_indicator.dart';
 import 'package:personality_checker/shared/filled_button.dart';
@@ -285,7 +286,11 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 await state.clearQuestions();
                 if (context.mounted) {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const GettingStartedPage(),
+                      ),
+                      (Route<dynamic> route) => false);
                 }
               },
               child: const Text('Yes'),

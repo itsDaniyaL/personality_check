@@ -18,6 +18,7 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
   @override
   void initState() {
     super.initState();
+    fetchQuestions();
   }
 
   Future fetchQuestions() async {
@@ -58,15 +59,17 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                             TextSpan(
                                 text: "Get started\nwith your\n",
                                 style: TextStyle(
-                                    fontSize: 35.0,
-                                    fontWeight: FontWeight.w400,
-                                    color: Theme.of(context).primaryColorLight,)),
+                                  fontSize: 35.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).primaryColorLight,
+                                )),
                             TextSpan(
                                 text: "Personality Check",
                                 style: TextStyle(
-                                    fontSize: 35.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).secondaryHeaderColor,)),
+                                  fontSize: 35.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                )),
                           ]),
                         ),
                         if (orientation == Orientation.landscape)
@@ -98,7 +101,6 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
                       onPressed: isLoading
                           ? null
                           : () async {
-                              await fetchQuestions();
                               if (context.mounted) {
                                 Navigator.push<void>(
                                   context,
